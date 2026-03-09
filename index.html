@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Abdelhay LOUHI — Data Scientist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400;1,700&family=JetBrains+Mono:wght@400;500;600&family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   TOKENS
+============================================================ */
+:root {
+  --void:   #050508;
+  --deep:   #09090f;
+  --panel:  #0e0e17;
+  --card:   rgba(255,255,255,0.03);
+  --gold:   #c9a84c;
+  --gold2:  rgba(201,168,76,0.16);
+  --gold3:  rgba(201,168,76,0.07);
+  --text:   rgba(236,231,218,0.94);
+  --muted:  rgba(236,231,218,0.62);
+  --faint:  rgba(236,231,218,0.32);
+  --border: rgba(255,255,255,0.08);
+  --bord2:  rgba(201,168,76,0.26);
+  --max:    1020px;
+  --pad:    2.5rem;
+}
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+html { scroll-behavior:smooth; }
+
+body {
+  background: var(--void);
+  color: var(--text);
+  font-family: 'Lora', Georgia, serif;
+  font-size: 17px;
+  font-weight: 400;
+  line-height: 1.8;
+  overflow-x: hidden;
+}
+
+body::after {
+  content:''; position:fixed; inset:0; z-index:999; pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  opacity:0.45;
+}
+
+.wrap { max-width:var(--max); margin:0 auto; padding:0 var(--pad); }
+
+.lbl {
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.63rem; font-weight:500;
+  letter-spacing:0.28em; text-transform:uppercase;
+  color:var(--gold); margin-bottom:0.65rem;
+  display:flex; align-items:center; gap:0.8rem;
+}
+.lbl::before { content:''; width:1.8rem; height:1px; background:var(--gold); }
+
+h2 {
+  font-family:'Libre Baskerville', Georgia, serif;
+  font-size:clamp(2rem, 3.8vw, 3.2rem);
+  font-weight:700; line-height:1.1; letter-spacing:-0.015em;
+  color:rgba(236,231,218,0.97); margin-bottom:1.6rem;
+}
+h2 em { font-style:italic; color:var(--gold); }
+
+h3 {
+  font-family:'Libre Baskerville', serif;
+  font-size:1.18rem; font-weight:700; line-height:1.22;
+  color:rgba(236,231,218,0.96); margin-bottom:0.55rem;
+}
+
+p { color:var(--muted); }
+p strong { color:rgba(236,231,218,0.88); font-weight:700; }
+p em { color:var(--gold); font-style:italic; }
+
+.fade { opacity:0; transform:translateY(18px); transition:opacity 0.75s ease, transform 0.75s ease; }
+.fade.on { opacity:1; transform:none; }
+
+/* ============================================================
+   NAV
+============================================================ */
+nav {
+  position:fixed; inset:0 0 auto 0; z-index:600;
+  background:rgba(5,5,8,0.88); backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--border);
+  display:flex; justify-content:center;
+}
+.nav-inner {
+  max-width:var(--max); width:100%; padding:0 var(--pad);
+  height:56px; display:flex; justify-content:space-between; align-items:center;
+}
+.nav-logo {
+  font-family:'Libre Baskerville',serif;
+  font-size:1rem; font-weight:700;
+  color:var(--text); text-decoration:none; letter-spacing:0.01em;
+}
+.nav-logo em { font-style:italic; color:var(--gold); }
+.nav-links { display:flex; gap:1.8rem; list-style:none; }
+.nav-links a {
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.62rem; font-weight:500; letter-spacing:0.12em;
+  text-transform:uppercase; color:var(--faint);
+  text-decoration:none; transition:color 0.2s;
+}
+.nav-links a:hover { color:var(--gold); }
+
+/* ============================================================
+   HERO
+============================================================ */
+.hero {
+  position:relative; width:100%; height:100vh; overflow:hidden;
+  display:flex; align-items:center; justify-content:center;
+}
+#starfield { position:absolute; inset:0; width:100%; height:100%; display:block; }
+.hero-vig {
+  position:absolute; inset:0; pointer-events:none;
+  background:radial-gradient(ellipse at center,
+    rgba(5,5,8,0) 0%, rgba(5,5,8,0.45) 50%, rgba(5,5,8,0.96) 100%);
+}
+.hero-content {
+  position:relative; z-index:10;
+  text-align:center; padding:2rem; max-width:700px;
+}
+.hero-eye {
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.65rem; font-weight:500;
+  letter-spacing:0.3em; text-transform:uppercase;
+  color:var(--gold); margin-bottom:1.8rem;
+  display:flex; align-items:center; justify-content:center; gap:1rem;
+  opacity:0; animation:fup 0.9s ease 0.3s forwards;
+}
+.hero-eye::before,.hero-eye::after { content:''; width:2rem; height:1px; background:var(--gold); opacity:0.5; }
+
+.hero h1 {
+  font-family:'Libre Baskerville',serif;
+  font-size:clamp(2.8rem, 7vw, 5.8rem);
+  font-weight:700; line-height:1.06; letter-spacing:-0.025em;
+  color:rgba(236,231,218,0.98); margin-bottom:1.4rem;
+  opacity:0; animation:fup 0.9s ease 0.55s forwards;
+}
+.hero h1 em { font-style:italic; color:var(--gold); }
+
+.hero-tag {
+  font-family:'Lora',serif; font-size:1.1rem; font-weight:400;
+  color:var(--muted); line-height:1.82; max-width:48ch; margin:0 auto 2.6rem;
+  opacity:0; animation:fup 0.9s ease 0.8s forwards;
+}
+.hero-cta {
+  display:flex; justify-content:center; gap:1rem; flex-wrap:wrap;
+  opacity:0; animation:fup 0.9s ease 1s forwards;
+}
+.scroll-hint {
+  position:absolute; bottom:2.2rem; left:50%; transform:translateX(-50%); z-index:10;
+  display:flex; flex-direction:column; align-items:center; gap:0.5rem;
+  font-family:'JetBrains Mono',monospace; font-size:0.56rem; letter-spacing:0.22em;
+  text-transform:uppercase; color:var(--faint);
+  opacity:0; animation:fup 0.9s ease 1.4s forwards;
+}
+.scroll-arr {
+  width:1px; height:38px;
+  background:linear-gradient(to bottom, rgba(201,168,76,0.8), transparent);
+  animation:pulse 2.4s ease infinite;
+}
+@keyframes fup { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:none} }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+/* ============================================================
+   BUTTONS
+============================================================ */
+.btn {
+  display:inline-flex; align-items:center; gap:0.5rem;
+  padding:0.78rem 1.8rem;
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.66rem; font-weight:600; letter-spacing:0.1em;
+  text-transform:uppercase; text-decoration:none;
+  transition:all 0.22s; cursor:pointer; border:none;
+}
+.btn-pri { background:var(--gold); color:var(--void); }
+.btn-pri:hover { background:rgba(236,231,218,0.95); transform:translateY(-2px); }
+.btn-out { background:transparent; color:var(--text); border:1px solid rgba(236,231,218,0.22); }
+.btn-out:hover { border-color:var(--gold); color:var(--gold); transform:translateY(-2px); }
+
+.sec { padding:6.5rem 0; }
+.sec + .sec { border-top:1px solid var(--border); }
+
+/* ============================================================
+   PROFILE
+============================================================ */
+#profile { background:var(--deep); border-top:1px solid var(--border); }
+
+.profile-layout { display:grid; grid-template-columns:200px 1fr; gap:3.5rem; align-items:start; }
+
+.ava-col { display:flex; flex-direction:column; align-items:center; gap:1rem; }
+.ava {
+  width:184px; height:184px; border-radius:50%;
+  border:2px solid var(--bord2);
+  background:linear-gradient(135deg,#1a1a26,#09090f);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Libre Baskerville',serif; font-size:4.2rem; font-weight:700;
+  color:var(--gold); overflow:hidden; position:relative; cursor:pointer;
+}
+.ava img { width:100%; height:100%; object-fit:cover; border-radius:50%; }
+.ava-upload {
+  position:absolute; inset:0; border-radius:50%;
+  background:rgba(5,5,8,0.76);
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;
+  opacity:0; transition:opacity 0.25s;
+  font-family:'JetBrains Mono',monospace; font-size:0.57rem; letter-spacing:0.1em;
+  text-transform:uppercase; color:var(--gold);
+}
+.ava:hover .ava-upload { opacity:1; }
+#photo-input { display:none; }
+
+.id-table { border:1px solid var(--border); overflow:hidden; }
+.id-row { display:grid; grid-template-columns:170px 1fr; border-bottom:1px solid var(--border); }
+.id-row:last-child { border-bottom:none; }
+.id-key {
+  padding:0.82rem 1.1rem;
+  font-family:'JetBrains Mono',monospace; font-size:0.61rem; font-weight:500;
+  letter-spacing:0.14em; text-transform:uppercase;
+  color:var(--gold); opacity:0.72;
+  background:rgba(201,168,76,0.04); border-right:1px solid var(--border);
+  display:flex; align-items:center;
+}
+.id-val {
+  padding:0.82rem 1.2rem;
+  font-family:'Lora',serif; font-size:1rem; font-weight:400;
+  color:var(--text); line-height:1.55;
+  display:flex; align-items:center; flex-wrap:wrap; gap:0.4rem;
+}
+.editable:hover { border-color:rgba(201,168,76,0.4); }
+.editable:focus { border-color:var(--gold); background:rgba(201,168,76,0.07); }
+.editable:empty::before { content:attr(data-ph); color:var(--faint); font-style:italic; }
+
+.id-note {
+  margin-top:0.75rem;
+  font-family:'JetBrains Mono',monospace; font-size:0.59rem; letter-spacing:0.1em;
+  color:var(--faint); display:flex; align-items:center; gap:0.5rem;
+}
+.id-note::before { content:'✎'; color:var(--gold); opacity:0.5; }
+
+.id-bio {
+  margin-top:1.6rem; padding:1.3rem 1.5rem;
+  border-left:3px solid var(--gold); background:var(--gold3);
+}
+.id-bio p { font-family:'Lora',serif; font-size:1.02rem; line-height:1.85; color:var(--muted); }
+
+/* ============================================================
+   MANIFESTO
+============================================================ */
+#manifesto { background:var(--void); position:relative; overflow:hidden; }
+#manifesto::before {
+  content:'KNOWLEDGE';
+  position:absolute; pointer-events:none;
+  font-family:'Libre Baskerville',serif;
+  font-size:17vw; font-weight:700; opacity:0.02;
+  top:50%; left:50%; transform:translate(-50%,-50%);
+  white-space:nowrap; color:var(--gold); letter-spacing:-0.04em;
+}
+
+.manifesto-body {
+  display:grid; grid-template-columns:1fr 1fr; gap:5rem;
+  margin-top:2.5rem; position:relative; z-index:1;
+}
+
+.manifesto-text p {
+  font-family:'Lora',serif; font-size:1.04rem; font-weight:400; line-height:1.9;
+  color:var(--muted); margin-bottom:1.4rem;
+}
+.manifesto-text p:last-child { margin-bottom:0; }
+
+.chain-label {
+  font-family:'JetBrains Mono',monospace; font-size:0.61rem; font-weight:500;
+  letter-spacing:0.22em; text-transform:uppercase;
+  color:var(--faint); margin-bottom:1.2rem;
+}
+.chain { display:flex; flex-direction:column; }
+.chain-item {
+  display:flex; align-items:flex-start; gap:1rem;
+  padding:1.1rem 1.2rem;
+  border:1px solid var(--border); background:var(--card);
+  position:relative; transition:border-color 0.25s, background 0.25s;
+}
+.chain-item:hover { border-color:var(--bord2); background:var(--gold3); }
+.chain-item + .chain-item { margin-top:-1px; }
+
+.chain-connector {
+  display:flex; justify-content:flex-start; align-items:center;
+  padding-left:2.5rem; height:22px; position:relative; z-index:2;
+}
+.chain-connector::before {
+  content:''; width:1px; height:100%;
+  background:linear-gradient(to bottom, rgba(201,168,76,0.5), rgba(201,168,76,0.15));
+}
+.chain-connector::after {
+  content:'▾'; color:var(--gold); opacity:0.45; font-size:0.75rem;
+  position:absolute; bottom:-4px; left:calc(2.5rem - 5px);
+}
+
+.chain-icon { font-size:1.3rem; flex-shrink:0; margin-top:0.1rem; }
+.chain-title {
+  font-family:'Libre Baskerville',serif; font-size:0.94rem; font-weight:700;
+  color:rgba(236,231,218,0.92); margin-bottom:0.22rem;
+}
+.chain-desc {
+  font-family:'Lora',serif; font-size:0.88rem; color:var(--muted); line-height:1.6;
+}
+
+.dtags-wrap { margin-top:2rem; }
+.dtags-label {
+  font-family:'JetBrains Mono',monospace; font-size:0.61rem; font-weight:500;
+  letter-spacing:0.22em; text-transform:uppercase;
+  color:var(--faint); margin-bottom:1rem;
+}
+.dtags { display:flex; flex-wrap:wrap; gap:0.45rem; }
+.dtag {
+  display:inline-flex; align-items:center; gap:0.38rem;
+  padding:0.3rem 0.88rem; border:1px solid var(--border);
+  font-family:'JetBrains Mono',monospace; font-size:0.63rem; font-weight:500;
+  letter-spacing:0.05em; color:var(--faint);
+  transition:all 0.22s; cursor:default;
+}
+.dtag:hover { border-color:var(--gold); color:var(--gold); transform:translateY(-2px); }
+.dtag-dot { width:4px; height:4px; border-radius:50%; background:var(--gold); opacity:0.4; flex-shrink:0; transition:opacity 0.2s; }
+.dtag:hover .dtag-dot { opacity:1; }
+
+.manifesto-quote {
+  margin-top:3.5rem; padding:1.7rem 2.2rem;
+  border:1px solid var(--bord2); background:var(--gold3);
+  text-align:center; position:relative; z-index:1;
+}
+.manifesto-quote blockquote {
+  font-family:'Libre Baskerville',serif; font-style:italic;
+  font-size:1.16rem; font-weight:400;
+  color:rgba(236,231,218,0.8); line-height:1.7; max-width:74ch; margin:0 auto;
+}
+.manifesto-quote cite {
+  display:block; margin-top:0.9rem;
+  font-family:'JetBrains Mono',monospace; font-size:0.59rem; font-weight:500;
+  letter-spacing:0.15em; text-transform:uppercase; font-style:normal;
+  color:var(--gold); opacity:0.65;
+}
+
+/* ============================================================
+   SKILLS
+============================================================ */
+#skills { background:var(--panel); }
+
+.skills-intro {
+  max-width:60ch; font-family:'Lora',serif;
+  font-size:1.04rem; line-height:1.88; margin-bottom:3.5rem;
+  color:var(--muted);
+}
+
+.skill-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:1.4rem; }
+
+.sk {
+  border:1px solid var(--border); background:var(--card);
+  padding:1.7rem; position:relative; overflow:hidden;
+  transition:all 0.26s;
+}
+.sk::before {
+  content:''; position:absolute; left:0; top:0; bottom:0;
+  width:2px; background:var(--gold);
+  transform:scaleY(0); transform-origin:bottom; transition:transform 0.28s;
+}
+.sk:hover { background:rgba(255,255,255,0.045); transform:translateY(-3px); border-color:var(--bord2); }
+.sk:hover::before { transform:scaleY(1); }
+
+.sk-icon { font-size:1.7rem; margin-bottom:0.85rem; display:block; }
+.sk h3 { font-size:1.06rem; margin-bottom:0.5rem; }
+.sk p { font-family:'Lora',serif; font-size:0.93rem; line-height:1.72; color:var(--muted); margin-bottom:1rem; }
+.sk-tags { display:flex; flex-wrap:wrap; gap:0.3rem; }
+.sk-tag {
+  font-family:'JetBrains Mono',monospace; font-size:0.57rem; font-weight:500;
+  padding:0.15rem 0.55rem; letter-spacing:0.04em;
+  background:rgba(255,255,255,0.04); border:1px solid var(--border);
+  color:rgba(236,231,218,0.35);
+}
+
+/* ============================================================
+   PROJECTS — horizontal plates
+============================================================ */
+#projects { background:var(--deep); }
+
+.proj-intro {
+  max-width:58ch; font-family:'Lora',serif;
+  font-size:1.04rem; line-height:1.88; margin-bottom:2.8rem; color:var(--muted);
+}
+
+.proj-list { display:flex; flex-direction:column; }
+
+.plate {
+  display:grid; grid-template-columns:200px 1fr 52px;
+  align-items:stretch; border:1px solid var(--border);
+  background:var(--card); margin-bottom:-1px;
+  position:relative; overflow:hidden;
+  transition:border-color 0.26s, background 0.26s;
+  cursor:pointer;
+}
+.plate:hover { border-color:var(--bord2); background:rgba(255,255,255,0.04); z-index:1; }
+.plate::before {
+  content:''; position:absolute; left:0; top:0; bottom:0;
+  width:2px; background:var(--gold);
+  transform:scaleY(0); transform-origin:center; transition:transform 0.28s;
+}
+.plate:hover::before { transform:scaleY(1); }
+.plate.active { border-color:var(--bord2); background:rgba(201,168,76,0.05); z-index:1; }
+.plate.active::before { transform:scaleY(1); }
+
+.plate-img {
+  width:200px; flex-shrink:0; overflow:hidden;
+  background:var(--void); display:flex; align-items:center; justify-content:center;
+  min-height:115px;
+}
+.plate-img img {
+  width:100%; height:100%; object-fit:cover; display:block;
+  filter:brightness(0.58) saturate(0.6);
+  transition:filter 0.35s, transform 0.4s;
+}
+.plate:hover .plate-img img,
+.plate.active .plate-img img { filter:brightness(0.82) saturate(1); transform:scale(1.06); }
+.plate-emoji { font-size:3.2rem; opacity:0.14; }
+
+.plate-body { padding:1.3rem 1.6rem; display:flex; flex-direction:column; justify-content:center; }
+.plate-dom {
+  font-family:'JetBrains Mono',monospace; font-size:0.59rem; font-weight:500;
+  letter-spacing:0.18em; text-transform:uppercase;
+  color:var(--gold); margin-bottom:0.4rem;
+}
+.plate-title {
+  font-family:'Libre Baskerville',serif; font-size:1.06rem; font-weight:700;
+  color:rgba(236,231,218,0.94); line-height:1.28; margin-bottom:0.45rem;
+}
+.plate-short {
+  font-family:'Lora',serif; font-size:0.91rem; color:var(--muted); line-height:1.62;
+  display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;
+}
+
+.plate-arrow {
+  display:flex; align-items:center; justify-content:center;
+  border-left:1px solid var(--border);
+  color:var(--faint); font-size:1.25rem; font-weight:300;
+  transition:color 0.2s, border-color 0.2s; user-select:none;
+}
+.plate:hover .plate-arrow,
+.plate.active .plate-arrow { color:var(--gold); border-color:var(--bord2); }
+
+/* Expanded detail */
+.plate-detail {
+  max-height:0; overflow:hidden;
+  transition:max-height 0.48s cubic-bezier(0.4,0,0.2,1);
+  border-left:1px solid transparent; border-right:1px solid transparent;
+  background:rgba(201,168,76,0.04); margin-bottom:-1px;
+}
+.plate-detail.open {
+  max-height:600px;
+  border-color:var(--bord2);
+  border-bottom:1px solid var(--bord2);
+}
+.plate-detail-inner {
+  padding:2rem 2.2rem 2rem calc(200px + 2.2rem);
+  display:grid; grid-template-columns:1fr 140px; gap:2.5rem; align-items:start;
+}
+.detail-body p {
+  font-family:'Lora',serif; font-size:0.97rem; line-height:1.85; color:var(--muted);
+  margin-bottom:1rem;
+}
+.detail-insight {
+  padding:0.85rem 1.1rem;
+  background:var(--gold2); border-left:2px solid var(--gold);
+  font-family:'Lora',serif; font-style:italic;
+  font-size:0.92rem; color:rgba(236,231,218,0.62); line-height:1.65;
+  margin-bottom:1rem;
+}
+.detail-tags { display:flex; flex-wrap:wrap; gap:0.35rem; margin-top:0.5rem; }
+.detail-tag {
+  font-family:'JetBrains Mono',monospace; font-size:0.58rem; font-weight:500;
+  padding:0.15rem 0.55rem; border:1px solid var(--border); color:var(--faint);
+}
+.detail-links { display:flex; flex-direction:column; gap:0.65rem; }
+.detail-link {
+  font-family:'JetBrains Mono',monospace; font-size:0.61rem; font-weight:500;
+  letter-spacing:0.08em; text-transform:uppercase;
+  color:var(--faint); text-decoration:none;
+  border:1px solid var(--border); padding:0.35rem 0.85rem;
+  transition:all 0.2s; display:flex; align-items:center; gap:0.3rem; white-space:nowrap;
+}
+.detail-link:hover { color:var(--gold); border-color:var(--bord2); }
+.detail-link::after { content:'→'; }
+
+/* ============================================================
+   NOTEBOOK
+============================================================ */
+#notebook { background:var(--panel); }
+.nb-intro { max-width:54ch; font-size:1.02rem; line-height:1.88; margin-bottom:2.5rem; color:var(--muted); }
+.posts { list-style:none; }
+.post {
+  display:grid; grid-template-columns:90px 1fr auto;
+  align-items:baseline; gap:1.8rem;
+  padding:1.2rem 0; border-bottom:1px solid var(--border);
+  transition:padding-left 0.22s;
+}
+.post:hover { padding-left:0.5rem; }
+.post-date {
+  font-family:'JetBrains Mono',monospace; font-size:0.59rem; font-weight:500;
+  color:var(--gold); opacity:0.62; white-space:nowrap;
+}
+.post-title {
+  font-family:'Libre Baskerville',serif; font-size:1.02rem; font-weight:700;
+  color:rgba(236,231,218,0.82); text-decoration:none; line-height:1.35; transition:color 0.2s;
+}
+.post-title:hover { color:var(--gold); }
+.post-tag {
+  font-family:'JetBrains Mono',monospace; font-size:0.56rem;
+  padding:0.12rem 0.55rem; border:1px solid var(--border);
+  color:var(--faint); white-space:nowrap;
+}
+
+/* ============================================================
+   CONTACT
+============================================================ */
+#contact { background:var(--void); }
+.contact-grid { display:grid; grid-template-columns:1.1fr 0.9fr; gap:5rem; align-items:start; }
+.contact-lead { font-family:'Lora',serif; font-size:1.04rem; color:var(--muted); margin-bottom:2rem; max-width:40ch; line-height:1.88; }
+.contact-actions { display:flex; gap:0.75rem; flex-wrap:wrap; }
+.cdetail-lbl {
+  font-family:'JetBrains Mono',monospace; font-size:0.6rem; font-weight:500;
+  letter-spacing:0.22em; text-transform:uppercase;
+  color:var(--gold); opacity:0.62; margin-bottom:1.1rem;
+}
+.citem { display:flex; align-items:flex-start; gap:0.9rem; padding:1rem 0; border-bottom:1px solid var(--border); }
+.citem-icon { font-size:0.95rem; opacity:0.4; margin-top:0.15rem; flex-shrink:0; }
+.citem-type {
+  font-family:'JetBrains Mono',monospace; font-size:0.57rem; font-weight:500;
+  letter-spacing:0.14em; text-transform:uppercase; color:var(--faint); margin-bottom:0.2rem;
+}
+.citem a, .citem span {
+  font-family:'JetBrains Mono',monospace; font-size:0.77rem;
+  color:rgba(236,231,218,0.72); text-decoration:none; transition:color 0.2s;
+}
+.citem a:hover { color:var(--gold); }
+
+/* ============================================================
+   FOOTER
+============================================================ */
+footer { background:var(--void); border-top:1px solid var(--border); padding:1.4rem 0; }
+.foot-inner {
+  max-width:var(--max); margin:0 auto; padding:0 var(--pad);
+  display:flex; justify-content:space-between; align-items:center;
+  font-family:'JetBrains Mono',monospace; font-size:0.59rem; font-weight:500;
+  letter-spacing:0.08em; color:var(--faint);
+}
+footer a { color:var(--faint); text-decoration:none; transition:color 0.2s; }
+footer a:hover { color:var(--gold); }
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+@media(max-width:860px){
+  :root { --pad:1.4rem; }
+  .nav-links { display:none; }
+  .profile-layout { grid-template-columns:1fr; gap:2rem; }
+  .ava-col { flex-direction:row; align-items:center; }
+  .id-row { grid-template-columns:120px 1fr; }
+  .manifesto-body { grid-template-columns:1fr; gap:2.5rem; }
+  .skill-cards { grid-template-columns:1fr; }
+  .plate { grid-template-columns:130px 1fr 42px; }
+  .plate-img { width:130px; }
+  .plate-detail-inner { padding:1.5rem 1.2rem 1.5rem calc(130px + 1.4rem); grid-template-columns:1fr; gap:1rem; }
+  .contact-grid { grid-template-columns:1fr; gap:2.5rem; }
+  .post { grid-template-columns:1fr; gap:0.25rem; }
+  .foot-inner { flex-direction:column; gap:0.4rem; text-align:center; }
+}
+@media(max-width:520px){
+  .plate { grid-template-columns:100px 1fr 38px; }
+  .plate-img { width:100px; min-height:90px; }
+  .plate-detail-inner { padding:1.2rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">Abdelhay LOUHI <em>·</em></a>
+    <ul class="nav-links">
+      <li><a href="#profile">Profile</a></li>
+      <li><a href="#manifesto">Manifesto</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#notebook">Notebook</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero" id="top">
+  <canvas id="starfield"></canvas>
+  <div class="hero-vig"></div>
+  <div class="hero-content">
+    <div class="hero-eye">Data Scientist · Explorer · Problem Solver</div>
+    <h2><em>Abdelhay LOUHI</em><br>reads the universe in data</h2>
+    <p class="hero-tag">From particle physics to living cells — wherever there is data, there is a question to ask, a pattern to find, and a truth waiting to be discovered.</p>
+    <div class="hero-cta">
+      <a href="#profile" class="btn btn-pri">About me</a>
+      <a href="#projects" class="btn btn-out">See my work</a>
+    </div>
+  </div>
+  <div class="scroll-hint"><span>Explore</span><div class="scroll-arr"></div></div>
+</div>
+
+<!-- PROFILE -->
+<div class="sec" id="profile" style="background:var(--deep);">
+  <div class="wrap">
+    <div class="lbl">Profile</div>
+    <h2>Who I am</h2>
+    <div class="profile-layout fade">
+      <div class="ava-col">
+        <div class="ava" id="ava-wrap" onclick="document.getElementById('photo-input').click()">
+          <span id="ava-letter">A</span>
+          <div class="ava-upload"><span style="font-size:1.4rem">📷</span><span>Add photo</span></div>
+        </div>
+        <input type="file" id="photo-input" accept="image/*">
+        <div style="font-family:'JetBrains Mono',monospace;font-size:0.62rem;color:var(--gold);opacity:0.75;text-align:center;" id="ava-name">Abdelhay LOUHI</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:0.59rem;color:var(--faint);text-align:center;">@abdelhay-louhi · github</div>
+      </div>
+      <div>
+        <div class="id-table">
+          <div class="id-row">
+            <span class="id-key">Full name</span>
+            <span class="id-val"><span id="field-name">Abdelhay LOUHI</span></span>
+          </div>
+          <div class="id-row">
+            <span class="id-key">Position / Level</span>
+            <span class="id-val"><span >Master's Student</span></span>
+          </div>
+          <div class="id-row">
+            <span class="id-key">Field of study</span>
+            <span class="id-val"><span >AI &amp; IoT</span></span>
+          </div>
+          <div class="id-row">
+            <span class="id-key">Institution</span>
+            <span class="id-val"><span  >Ibn Tofail University </span></span>
+          </div>
+          <div class="id-row">
+            <span class="id-key">Location</span>
+            <span class="id-val"><span >Ouarzazate, Morocco | Kenitra </span></span>
+          </div>
+          <div class="id-row">
+            <span class="id-key">Skills/Interests</span>
+            <span class="id-val" style="font-size:0.93rem;"> Data Science . Mathematics . Problem-solving . Machine Learning . Deep Learning . Computer Vision . NLP . Operation Research . Game theory . Computational Intelligence . Evolutionary Algorithms |Natural Sciences : Physics · Cosmology · Biology | Finance . CyberSecurity </span>
+          </div>
+          <div class="id-row">
+            <span class="id-key">Technical stack</span>
+            <span class="id-val" style="font-size:0.93rem;">C/C++ . Python . Java | SQL . NumPy . Pandas . Matplotlib . Scikit-learn . TensorFlow (Keras) . OpenCV . NLTK . BeautifulSoup . MySQL . Spark . MongoBD | Git, Docker, SSH, Linux(Debian) </span>
+          </div>
+        </div>
+        <!-- <div class="id-bio">
+          <p>I'm Abdelhay LOUHI — a data scientist in the broadest sense of the word. My curiosity does not stop at the boundary of a single discipline. Mathematics, Natural sciences like <strong>Physics, cosmology and biology</strong> — Are always source of insperation for me. I build systems, simulate dynamics, and find elegant paths through spaces where conventional methods hesitate. For me, data science is not a specialisation. It is the <em>science of all sciences</em> — the art of asking the right question about any system, in any domain, and finding the structure hidden in the noise.</p>
+        </div> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MANIFESTO -->
+<div class="sec" id="manifesto" style="background:var(--void);">
+  <div class="wrap">
+    <div class="lbl">Manifesto</div>
+    <h2>Data science is the<br><em>science of all sciences</em></h2>
+
+    <div class="manifesto-body fade">
+      <div class="manifesto-text">
+        <p>Every science is, at its core, the same act repeated: <strong>observe the world, find the pattern, build the model, test it.</strong> Kepler did data science when he mapped planetary orbits — he was doing exactly what we do today with neural networks and inference engines. The spirit has never changed. Only the instruments evolved.</p>
+
+        <p>What makes data science singular is that it belongs to no domain. <em>It is the universal method.</em> A physicist uses it to probe dark matter. A biologist uses it to decode genetic expression. A cosmologist uses it to reconstruct the structure of the universe from noise. The data changes; the discipline of asking and answering does not.</p>
+
+        <p><strong>Scientific understanding is the engine of everything humanity builds.</strong> Every technology that surrounds us is crystallised science. The transistor came from quantum mechanics. GPS came from general relativity. Medical imaging came from nuclear physics. The internet's architecture came from information theory. You cannot build well what you do not understand deeply.</p>
+
+        <p>This is why I care as much about <em>understanding</em> as about <em>building</em>. The scientist who grasps the underlying laws will always engineer more cleverly than the one who only applies the recipe. <strong>Cross-domain knowledge is the sharpest competitive advantage a problem-solver can have</strong> — and it is what I mean when I call myself a data scientist.</p>
+      </div>
+
+      <div>
+        <div class="chain-label">The chain from knowledge to creation</div>
+        <div class="chain">
+          <div class="chain-item">
+            <div class="chain-icon">🔭</div>
+            <div>
+              <div class="chain-title">Observation &amp; Data</div>
+              <div class="chain-desc">Every science begins with careful observation — measuring, recording, questioning what the numbers reveal about reality.</div>
+            </div>
+          </div>
+          <div class="chain-connector"></div>
+          <div class="chain-item">
+            <div class="chain-icon">∑</div>
+            <div>
+              <div class="chain-title">Modelling &amp; Understanding</div>
+              <div class="chain-desc">From data emerges a model — a compressed, testable description of reality. The simpler and truer, the more powerful.</div>
+            </div>
+          </div>
+          <div class="chain-connector"></div>
+          <div class="chain-item">
+            <div class="chain-icon">⚡</div>
+            <div>
+              <div class="chain-title">Technology &amp; Innovation</div>
+              <div class="chain-desc">Deep understanding crystallises into tools, machines, algorithms. Technology is applied science made durable and repeatable.</div>
+            </div>
+          </div>
+          <div class="chain-connector"></div>
+          <div class="chain-item">
+            <div class="chain-icon">🌐</div>
+            <div>
+              <div class="chain-title">New Questions</div>
+              <div class="chain-desc">Every answer opens new territory. Technology exposes phenomena previously invisible — and the cycle of discovery begins again.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dtags-wrap">
+          <div class="dtags-label">Sciences I draw from</div>
+          <div class="dtags">
+            <span class="dtag"><span class="dtag-dot"></span>Classical Mechanics</span>
+            <span class="dtag"><span class="dtag-dot"></span>Combinatorics</span>
+            <span class="dtag"><span class="dtag-dot"></span>Cosmology</span>
+            <span class="dtag"><span class="dtag-dot"></span>Physics</span>
+            <span class="dtag"><span class="dtag-dot"></span>Biology</span>
+            <span class="dtag"><span class="dtag-dot"></span>Statistical Mechanics</span>
+            <!-- <span class="dtag"><span class="dtag-dot"></span>Thermodynamics</span> -->
+            <span class="dtag"><span class="dtag-dot"></span>Information Theory</span>
+            <span class="dtag"><span class="dtag-dot"></span>Complex Systems</span>
+            <span class="dtag"><span class="dtag-dot"></span>Dynamical Systems</span>
+            <!-- <span class="dtag"><span class="dtag-dot"></span>Projective Geometry</span> -->
+            <!-- <span class="dtag"><span class="dtag-dot"></span>Ecology</span> -->
+            <span class="dtag"><span class="dtag-dot"></span>Genetics</span>
+            <!-- <span class="dtag"><span class="dtag-dot"></span>Neuroscience</span> -->
+            <!-- <span class="dtag"><span class="dtag-dot"></span>Chaos Theory</span> -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="manifesto-quote fade">
+      <blockquote>The transistor came from quantum mechanics. GPS came from general relativity. Deep learning came from neuroscience. Every technology is crystallised science — which is why the deepest builders are also the deepest understanders.</blockquote>
+      <cite>— Abdelhay LOUHI, on the chain from knowledge to creation</cite>
+    </div>
+  </div>
+</div>
+
+<!-- SKILLS -->
+<div class="sec" id="skills" style="background:var(--panel);">
+  <div class="wrap">
+    <div class="lbl">Capabilities</div>
+    <h2>How I <em>think</em> and what I bring</h2>
+    <p class="skills-intro">My toolkit is less a list of software and more a way of approaching problems — combining rigorous mathematical thinking with scientific curiosity.</p>
+
+    <div class="skill-cards">
+      <div class="sk fade">
+        <span class="sk-icon">∫</span>
+        <h3>Mathematical Thinking</h3>
+        <p>Mathematics is the framework of universe.</p>
+        <div class="sk-tags">
+          <span class="sk-tag">Linear Algebra</span><span class="sk-tag">Probability</span>
+          <span class="sk-tag">Combinatorics</span><span class="sk-tag">Analysis</span><span class="sk-tag">Number Theory</span>
+        </div>
+      </div>
+
+      <div class="sk fade">
+        <span class="sk-icon">⚙</span>
+        <h3>Mathematical Modelling</h3>
+        <p>It's the abstraction that let's us transform our problem into math language. A universal language that can tel us directly how to solve problems.</p>
+        <div class="sk-tags">
+          <span class="sk-tag">Abstraction</span><span class="sk-tag">Math Models</span>
+        </div>
+      </div>
+
+      <div class="sk fade">
+        <span class="sk-icon">🎯</span>
+        <h3>Operations Research</h3>
+        <p>Finding the best strategy under constraints — optimisation, scheduling, routing, resource allocation. Operations research is the discipline of rigorous decision-making at the intersection of mathematics, computation, and real-world constraints.</p>
+        <div class="sk-tags">
+          <span class="sk-tag">Linear Programming</span><span class="sk-tag">Integer Programming</span>
+          <span class="sk-tag">Metaheuristics</span><span class="sk-tag">Graph Algorithms</span>
+        </div>
+      </div>
+
+      <div class="sk fade">
+        <span class="sk-icon">♟</span>
+        <h3>Game Theory &amp; Strategy</h3>
+        <p>I am fascinated by systems where multiple agents interact — each with their own objectives, information, and strategies. Game theory gives me a formal language for reasoning about incentives, equilibria, and mechanism design in complex environments.</p>
+        <div class="sk-tags">
+          <span class="sk-tag">Nash Equilibria</span><span class="sk-tag">Mechanism Design</span>
+          <span class="sk-tag">Multi-agent Systems</span><span class="sk-tag">Decision Theory</span>
+        </div>
+      </div>
+
+      <div class="sk fade">
+        <span class="sk-icon">🧠</span>
+        <h3>Machine &amp; Deep Learning</h3>
+        <p>From the mathematics up: I understand why architectures work — why attention succeeds, what makes gradients flow, where models fail. CNNs, transformers, RNNs — studied as mathematical objects, not just API calls.</p>
+        <div class="sk-tags">
+          <span class="sk-tag">CNNs</span>
+          <span class="sk-tag">Transformers</span><span class="sk-tag">Evolutionary NN</span>
+        </div>
+      </div>
+
+      <div class="sk fade">
+        <span class="sk-icon">↯</span>
+        <h3>Cross-Domain Innovation</h3>
+        <p>The best ideas never stay inside one discipline.</p>
+        <div class="sk-tags">
+          <span class="sk-tag">Analogical Reasoning</span><span class="sk-tag">First Principles</span>
+          <span class="sk-tag">Systems Thinking</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROJECTS — horizontal plates -->
+<div class="sec" id="projects" style="background:var(--deep);">
+  <div class="wrap">
+    <div class="lbl">Selected Work</div>
+    <h2>Problems solved,<br><em>systems understood</em></h2>
+    <p class="proj-intro">Each project starts with a question that resists easy answers. Click any plate to read the full story.</p>
+
+    <div class="proj-list fade" id="proj-list">
+
+
+            <!-- 3 -->
+      <div class="plate" onclick="toggle('d3',this)" id="p3">
+        <div class="plate-img">
+          <img src="https://images.unsplash.com/photo-1611996575749-79a3a250f948?w=400&q=75&auto=format" alt="Puzzles"
+            onerror="this.parentNode.innerHTML='<div class=plate-emoji style=display:flex;align-items:center;justify-content:center;width:100%;height:100%;>♟</div>'"/>
+        </div>
+        <div class="plate-body">
+          <div class="plate-dom">Combinatorics · Optimisation · Mathematical Modeling </div>
+          <div class="plate-title">Computational Approaches Puzzles</div>
+          <div class="plate-short">Attacking what I call the 'Elon_Musk_Trailer_Problem', Which turns out to be a hard NP Problem after the modeling it as a satifaction problem</div>
+        </div>
+        <div class="plate-arrow">›</div>
+      </div>
+      <div class="plate-detail" id="d3">
+        <div class="plate-detail-inner">
+          <div class="detail-body">
+            <p>Attacking what I call the 'Elon_Musk_Trailer_Problem', Which turns out to be a hard NP Problem after the modeling it as a satifaction problem</p>
+            <div class="detail-tags">
+              <span class="detail-tag">Backtracking</span><span class="detail-tag">Constraint Propagation</span>
+              <span class="detail-tag">Simulated Annealing</span>
+            </div>
+          </div>
+          <div class="detail-links">
+            <!-- <a href="#" class="detail-link">GitHub</a> -->
+            <a href="elon_trailer_cubes_problem.html" class="detail-link">Write-up</a>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- 1 -->
+      <div class="plate" onclick="toggle('d1',this)" id="p1">
+        <div class="plate-img">
+          <img src="https://images.unsplash.com/photo-1591511335947-e4be2a803e22?w=400&q=75&auto=format" alt="Rubik"
+            onerror="this.parentNode.innerHTML='<div class=plate-emoji style=display:flex;align-items:center;justify-content:center;width:100%;height:100%;>🎲</div>'"/>
+        </div>
+        <div class="plate-body">
+          <div class="plate-dom">C++ · Evolutionary Algorithms · Combinatorics</div>
+          <div class="plate-title">Simulating a Rubik's Cube | Testing Genetic Algorithms to solve it (All form scratch)</div>
+          <div class="plate-short">Built a Rubik's Cube simulator in C++ from scratch, then let evolution find a solver — no group theory, no heuristics. Pure evolutionary search over 4.3 × 10¹⁹ states.</div>
+        </div>
+        <div class="plate-arrow">›</div>
+      </div>
+      <div class="plate-detail" id="d1">
+        <div class="plate-detail-inner">
+          <div class="detail-body">
+            <p>Built a complete Rubik's Cube in C++ from scratch, encoding the cube as a permutation group. Then fed it to thousands of virtual agents running a genetic algorithm: selection pressure, crossover over move sequences, mutation. No group theory encoded by hand — evolution had to discover it.</p>
+            <div class="detail-insight">💡 The hardest part was not the simulation — it was designing a fitness landscape over 4.3 × 10¹⁹ states that would actually guide evolution somewhere useful. Framing the problem turned out harder than solving it.</div>
+            <div class="detail-tags">
+              <span class="detail-tag">C++</span><span class="detail-tag">Genetic Algorithm</span>
+              <span class="detail-tag">Permutation Groups</span><span class="detail-tag">State Machines</span>
+            </div>
+          </div>
+          <div class="detail-links">
+            <a href="https://github.com/abdelhay-louhi/RubikCube_Simulator" class="detail-link">GitHub</a>
+            <!-- <a href="#" class="detail-link">Write-up</a> -->
+          </div>
+        </div>
+      </div>
+
+      <!-- 2 -->
+
+
+
+      
+    </div>
+  </div>
+</div>
+
+<!-- NOTEBOOK -->
+<div class="sec" id="notebook" style="background:var(--panel);">
+  <div class="wrap">
+    <div class="lbl">Writing &amp; Ideas</div>
+    <h2>The lab <em>notebook</em></h2>
+    <p class="nb-intro">When I work through something surprising, I write it down. Cross-disciplinary ideas, algorithmic intuitions, connections I want to think through more carefully.</p>
+    <ul class="posts">
+            <li class="post fade">
+        <span class="post-date">Abr 2025</span>
+        <a href="#" class="post-title">How Machine Deep Learning changes how we approach problems</a>
+        <span class="post-tag">Tutorial</span>
+      </li>
+      <li class="post fade">
+        <span class="post-date">Feb 2025</span>
+        <a href="#" class="post-title">Recovering 3D from 2D: what vanishing points really tell us</a>
+        <span class="post-tag">Tutorial</span>
+      </li>
+      <li class="post fade">
+        <span class="post-date">May 2025</span>
+        <a href="#" class="post-title">Why I consider combinatorics very fondamental for any scientist</a>
+        <span class="post-tag">Tutorial</span>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<div class="sec" id="contact" style="background:var(--void);">
+  <div class="wrap">
+    <div class="contact-grid">
+      <div>
+        <div class="lbl">Get in touch</div>
+        <h2>Let's explore something <em>together</em></h2>
+        <p class="contact-lead">A research problem that spans fields? A hard dataset with no obvious method? A conversation about the deep connections between physics and machine learning — I'm genuinely interested.</p>
+        <div class="contact-actions">
+          <a href="mailto:abdelhay.louhi@uit.ac.ma" class="btn btn-pri">Send email</a>
+          <a href="https://github.com/abdelhay-louhi" target="_blank" class="btn btn-out">GitHub</a>
+        </div>
+      </div>
+      <div class="fade">
+        <div class="cdetail-lbl">Direct contact</div>
+        <div class="citem">
+          <span class="citem-icon">✉</span>
+          <div><div class="citem-type">Email</div><a href="mailto:abdelhay.louhi@uit.ac.ma">abdelhay.louhi@uit.ac.ma</a></div>
+        </div>
+        <div class="citem">
+          <span class="citem-icon">📱</span>
+          <div><div class="citem-type">Phone / WhatsApp</div><a href="tel:0637313760">+212 (0) 637 31 37 60</a></div>
+        </div>
+        <div class="citem">
+          <span class="citem-icon">⌥</span>
+          <div><div class="citem-type">GitHub</div><a href="https://github.com/abdelhay-louhi" target="_blank">github.com/abdelhay-louhi</a></div>
+        </div>
+        <div class="citem">
+          <span class="citem-icon">◈</span>
+          <div><div class="citem-type">LinkedIn</div><a href="https://linkedin.com/in/abdelhay-louhi" target="_blank">linkedin.com/in/abdelhay-louhi</a></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="foot-inner">
+    <span>© 2025 Abdelhay LOUHI · Data Scientist</span>
+    <span>Built with curiosity &amp; first principles</span>
+    <a href="#top">↑ Top</a>
+  </div>
+</footer>
+
+<script>
+/* ---- STARFIELD ---- */
+(function(){
+  const cv=document.getElementById('starfield');
+  const ctx=cv.getContext('2d');
+  let W,H,nodes=[];
+  let mx=-9999,my=-9999;
+  const SYMS=['φ','ψ','Σ','∇','∂','∞','π','μ','θ','Ω','α','β','γ','λ','σ','ε'];
+  const LBLS=['Physics','Cosmos','Biology','Math','Evolution','Data','Entropy','Vision'];
+
+  function resize(){ W=cv.width=window.innerWidth; H=cv.height=window.innerHeight; }
+  function init(){
+    const n=Math.min(120,Math.floor(W*H/11000));
+    nodes=Array.from({length:n},()=>({
+      x:Math.random()*W, y:Math.random()*H,
+      r:Math.random()*2.2+0.6,
+      vx:(Math.random()-0.5)*0.22, vy:(Math.random()-0.5)*0.22,
+      ph:Math.random()*Math.PI*2,
+      sym:Math.random()>0.76?SYMS[Math.random()*SYMS.length|0]:null,
+      lbl:Math.random()>0.91?LBLS[Math.random()*LBLS.length|0]:null,
+      br:Math.random()*0.4+0.6,
+    }));
+  }
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    const t=Date.now()*0.001;
+    for(let i=0;i<nodes.length;i++) for(let j=i+1;j<nodes.length;j++){
+      const dx=nodes[i].x-nodes[j].x,dy=nodes[i].y-nodes[j].y,d=Math.hypot(dx,dy);
+      if(d<145){ ctx.beginPath(); ctx.moveTo(nodes[i].x,nodes[i].y); ctx.lineTo(nodes[j].x,nodes[j].y); ctx.strokeStyle=`rgba(201,168,76,${(1-d/145)*0.15})`; ctx.lineWidth=0.5; ctx.stroke(); }
+    }
+    nodes.forEach(n=>{
+      const dx=n.x-mx,dy=n.y-my,d=Math.hypot(dx,dy);
+      if(d<220){ ctx.beginPath(); ctx.moveTo(n.x,n.y); ctx.lineTo(mx,my); ctx.strokeStyle=`rgba(201,168,76,${(1-d/220)*0.5})`; ctx.lineWidth=0.85; ctx.stroke(); }
+    });
+    nodes.forEach(n=>{
+      const pulse=Math.sin(t*1.1+n.ph)*0.26+0.74, r=n.r*pulse, a=n.br*pulse;
+      const g=ctx.createRadialGradient(n.x,n.y,0,n.x,n.y,r*6);
+      g.addColorStop(0,`rgba(201,168,76,${a*0.28})`); g.addColorStop(1,'rgba(201,168,76,0)');
+      ctx.beginPath(); ctx.arc(n.x,n.y,r*6,0,Math.PI*2); ctx.fillStyle=g; ctx.fill();
+      ctx.beginPath(); ctx.arc(n.x,n.y,r,0,Math.PI*2); ctx.fillStyle=`rgba(201,168,76,${a*0.9})`; ctx.fill();
+      if(n.sym){ ctx.fillStyle=`rgba(201,168,76,${a*0.65})`; ctx.font=`${13+n.r*2}px "JetBrains Mono",monospace`; ctx.fillText(n.sym,n.x+n.r+5,n.y+5); }
+      if(n.lbl){ ctx.fillStyle=`rgba(201,168,76,${a*0.24})`; ctx.font=`9px "JetBrains Mono",monospace`; ctx.fillText(n.lbl.toUpperCase(),n.x+n.r+6,n.y+4); }
+      n.x+=n.vx; n.y+=n.vy;
+      if(n.x<-20)n.x=W+20; if(n.x>W+20)n.x=-20;
+      if(n.y<-20)n.y=H+20; if(n.y>H+20)n.y=-20;
+    });
+  }
+  function loop(){ draw(); requestAnimationFrame(loop); }
+  const hero=document.querySelector('.hero');
+  hero.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+  hero.addEventListener('mouseleave',()=>{mx=-9999;my=-9999;});
+  window.addEventListener('resize',()=>{resize();init();});
+  resize(); init(); loop();
+})();
+
+/* ---- PLATE TOGGLE ---- */
+function toggle(detailId, plateEl){
+  const detail=document.getElementById(detailId);
+  const isOpen=detail.classList.contains('open');
+
+  // close all
+  document.querySelectorAll('.plate-detail').forEach(d=>d.classList.remove('open'));
+  document.querySelectorAll('.plate').forEach(p=>{
+    p.classList.remove('active');
+    p.querySelector('.plate-arrow').textContent='›';
+  });
+
+  if(!isOpen){
+    detail.classList.add('open');
+    plateEl.classList.add('active');
+    plateEl.querySelector('.plate-arrow').textContent='∨';
+    // smooth scroll so detail is visible
+    setTimeout(()=>detail.scrollIntoView({behavior:'smooth',block:'nearest'}),80);
+  }
+}
+
+/* ---- SCROLL FADE ---- */
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach((e,i)=>{
+    if(e.isIntersecting) setTimeout(()=>e.target.classList.add('on'),i*65);
+  });
+},{threshold:0.07});
+document.querySelectorAll('.fade').forEach(el=>obs.observe(el));
+
+/* ---- PHOTO UPLOAD ---- */
+document.getElementById('photo-input').addEventListener('change',function(){
+  const file=this.files[0]; if(!file) return;
+  const r=new FileReader();
+  r.onload=e=>{
+    const w=document.getElementById('ava-wrap');
+    w.innerHTML=`<img src="${e.target.result}" alt="Abdelhay LOUHI"><div class="ava-upload"><span style="font-size:1.4rem">📷</span><span>Change</span></div>`;
+    w.onclick=()=>document.getElementById('photo-input').click();
+  };
+  r.readAsDataURL(file);
+});
+
+// /* ---- SYNC NAME ---- */
+// function syncName(){
+//   const txt=document.getElementById('field-name').innerText.trim();
+//   const ltr=document.getElementById('ava-letter');
+//   if(ltr) ltr.textContent=txt.charAt(0).toUpperCase()||'R';
+//   document.getElementById('ava-name').textContent=txt||'Abdelhay LOUHI';
+// }
+</script>
+</body>
+</html>

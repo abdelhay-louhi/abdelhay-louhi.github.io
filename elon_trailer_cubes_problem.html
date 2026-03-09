@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Computational Puzzles — Abdelhay</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400;1,700&family=JetBrains+Mono:wght@400;500;600&family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void:   #050508;
+  --deep:   #09090f;
+  --panel:  #0e0e17;
+  --card:   rgba(255,255,255,0.03);
+  --gold:   #c9a84c;
+  --gold2:  rgba(201,168,76,0.16);
+  --gold3:  rgba(201,168,76,0.07);
+  --text:   rgba(236,231,218,0.94);
+  --muted:  rgba(236,231,218,0.62);
+  --faint:  rgba(236,231,218,0.30);
+  --border: rgba(255,255,255,0.08);
+  --bord2:  rgba(201,168,76,0.26);
+  --max:    820px;
+  --pad:    2.5rem;
+}
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+html { scroll-behavior:smooth; }
+
+body {
+  background:var(--void);
+  color:var(--text);
+  font-family:'Lora', Georgia, serif;
+  font-size:17px;
+  font-weight:400;
+  line-height:1.8;
+  overflow-x:hidden;
+}
+
+/* grain */
+body::after {
+  content:''; position:fixed; inset:0; z-index:999; pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  opacity:0.45;
+}
+
+/* ── NAV ── */
+nav {
+  position:fixed; inset:0 0 auto 0; z-index:600;
+  background:rgba(5,5,8,0.88); backdrop-filter:blur(24px);
+  border-bottom:1px solid var(--border);
+  display:flex; justify-content:center;
+}
+.nav-inner {
+  max-width:var(--max); width:100%; padding:0 var(--pad);
+  height:56px; display:flex; justify-content:space-between; align-items:center;
+}
+.nav-logo {
+  font-family:'Libre Baskerville',serif;
+  font-size:0.95rem; font-weight:700;
+  color:var(--text); text-decoration:none;
+}
+.nav-logo em { font-style:italic; color:var(--gold); }
+.back-link {
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.62rem; font-weight:500; letter-spacing:0.12em;
+  text-transform:uppercase; color:var(--faint);
+  text-decoration:none; transition:color 0.2s;
+  display:flex; align-items:center; gap:0.5rem;
+}
+.back-link:hover { color:var(--gold); }
+.back-link::before { content:'←'; }
+
+/* ── HERO BAND ── */
+.hero-band {
+  margin-top:56px;
+  position:relative; overflow:hidden;
+  min-height:340px;
+  display:flex; align-items:flex-end;
+}
+.hero-band-img {
+  position:absolute; inset:0;
+  background-image:url('https://images.unsplash.com/photo-1611996575749-79a3a250f948?w=1200&q=80&auto=format');
+  background-size:cover; background-position:center;
+  filter:brightness(0.32) saturate(0.6);
+  transform:scale(1.04);
+  animation:slowzoom 18s ease-in-out infinite alternate;
+}
+@keyframes slowzoom { from{transform:scale(1.04)} to{transform:scale(1.09)} }
+
+.hero-band-vig {
+  position:absolute; inset:0;
+  background:linear-gradient(to top, rgba(5,5,8,1) 0%, rgba(5,5,8,0.5) 55%, rgba(5,5,8,0.15) 100%);
+}
+.hero-band-content {
+  position:relative; z-index:2;
+  max-width:var(--max); margin:0 auto; padding:0 var(--pad);
+  padding-bottom:3rem; width:100%;
+}
+.proj-eyebrow {
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.62rem; font-weight:500; letter-spacing:0.28em; text-transform:uppercase;
+  color:var(--gold); margin-bottom:1rem;
+  display:flex; align-items:center; gap:0.8rem;
+  opacity:0; animation:fup 0.8s ease 0.2s forwards;
+}
+.proj-eyebrow::before { content:''; width:1.5rem; height:1px; background:var(--gold); }
+.proj-eyebrow span {
+  padding:0.18rem 0.6rem; border:1px solid var(--bord2);
+  background:var(--gold3);
+}
+
+h1 {
+  font-family:'Libre Baskerville',serif;
+  font-size:clamp(1.9rem, 4.5vw, 3rem);
+  font-weight:700; line-height:1.1; letter-spacing:-0.02em;
+  color:rgba(236,231,218,0.98);
+  opacity:0; animation:fup 0.8s ease 0.4s forwards;
+  max-width:640px;
+}
+h1 em { font-style:italic; color:var(--gold); }
+
+.proj-meta {
+  margin-top:1.2rem; display:flex; flex-wrap:wrap; gap:0.5rem;
+  opacity:0; animation:fup 0.8s ease 0.6s forwards;
+}
+.meta-tag {
+  font-family:'JetBrains Mono',monospace; font-size:0.6rem; font-weight:500;
+  letter-spacing:0.06em; padding:0.22rem 0.7rem;
+  border:1px solid var(--border); color:var(--faint);
+}
+
+@keyframes fup { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:none} }
+
+/* ── BODY ── */
+.article {
+  max-width:var(--max); margin:0 auto; padding:4rem var(--pad) 6rem;
+}
+
+/* section label */
+.slbl {
+  font-family:'JetBrains Mono',monospace;
+  font-size:0.6rem; font-weight:600; letter-spacing:0.28em; text-transform:uppercase;
+  color:var(--gold); margin-bottom:0.6rem;
+  display:flex; align-items:center; gap:0.75rem;
+}
+.slbl::before { content:''; width:1.4rem; height:1px; background:var(--gold); }
+
+h2 {
+  font-family:'Libre Baskerville',serif;
+  font-size:1.55rem; font-weight:700; line-height:1.15; letter-spacing:-0.01em;
+  color:rgba(236,231,218,0.96); margin-bottom:1.2rem;
+}
+
+.prose p {
+  font-family:'Lora',serif; font-size:1.02rem; color:var(--muted);
+  line-height:1.88; margin-bottom:1.3rem;
+}
+.prose p:last-child { margin-bottom:0; }
+.prose p strong { color:rgba(236,231,218,0.88); font-weight:700; }
+.prose p em { color:var(--gold); font-style:italic; }
+
+/* ── INSIGHT BOX ── */
+.insight {
+  margin:2.5rem 0;
+  padding:1.2rem 1.4rem 1.2rem 1.6rem;
+  border-left:3px solid var(--gold); background:var(--gold3);
+  font-family:'Lora',serif; font-style:italic;
+  font-size:1rem; color:rgba(236,231,218,0.65); line-height:1.75;
+}
+.insight strong { font-style:normal; color:var(--gold); font-weight:700; }
+
+/* ── DIVIDER ── */
+.divider {
+  border:none; border-top:1px solid var(--border);
+  margin:3.5rem 0;
+}
+
+/* ── PUZZLE CARDS ── */
+.puzzles { display:flex; flex-direction:column; gap:1.6rem; margin-top:1.8rem; }
+
+.puzz {
+  border:1px solid var(--border); background:var(--card);
+  display:grid; grid-template-columns:72px 1fr;
+  gap:0; overflow:hidden; transition:border-color 0.25s;
+}
+.puzz:hover { border-color:var(--bord2); }
+
+.puzz-num {
+  background:var(--gold3); border-right:1px solid var(--border);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Libre Baskerville',serif; font-style:italic;
+  font-size:2rem; font-weight:700; color:var(--gold); opacity:0.6;
+}
+.puzz-body { padding:1.3rem 1.5rem; }
+.puzz-name {
+  font-family:'Libre Baskerville',serif; font-size:1.08rem; font-weight:700;
+  color:rgba(236,231,218,0.94); margin-bottom:0.4rem;
+}
+.puzz-desc {
+  font-family:'Lora',serif; font-size:0.93rem; color:var(--muted); line-height:1.7;
+  margin-bottom:0.85rem;
+}
+.puzz-methods { display:flex; flex-wrap:wrap; gap:0.35rem; }
+.puzz-method {
+  font-family:'JetBrains Mono',monospace; font-size:0.57rem; font-weight:500;
+  padding:0.14rem 0.55rem; border:1px solid var(--border); color:var(--faint);
+  transition:all 0.2s;
+}
+.puzz:hover .puzz-method { border-color:rgba(201,168,76,0.2); }
+
+/* ── COMPARISON TABLE ── */
+.tbl-wrap { overflow-x:auto; margin-top:1.8rem; }
+table {
+  width:100%; border-collapse:collapse;
+  font-family:'JetBrains Mono',monospace; font-size:0.72rem;
+}
+thead th {
+  padding:0.75rem 1rem; text-align:left;
+  font-weight:600; letter-spacing:0.1em; text-transform:uppercase;
+  color:var(--gold); opacity:0.75;
+  border-bottom:1px solid var(--bord2); background:var(--gold3);
+}
+tbody td {
+  padding:0.75rem 1rem;
+  border-bottom:1px solid var(--border); color:var(--muted);
+  vertical-align:top; line-height:1.55;
+}
+tbody tr:last-child td { border-bottom:none; }
+tbody tr:hover td { background:rgba(255,255,255,0.02); color:var(--text); }
+.dot-yes { color:#6bcb8b; }
+.dot-no  { color:#c96b6b; }
+.dot-part{ color:var(--gold); }
+
+/* ── KEY INSIGHT BLOCKS ── */
+.takeaways { display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; margin-top:1.8rem; }
+.tkw {
+  padding:1.3rem 1.4rem; border:1px solid var(--border); background:var(--card);
+  position:relative; overflow:hidden; transition:border-color 0.25s;
+}
+.tkw::before {
+  content:''; position:absolute; left:0; top:0; bottom:0;
+  width:2px; background:var(--gold);
+  transform:scaleY(0); transform-origin:bottom; transition:transform 0.28s;
+}
+.tkw:hover { border-color:var(--bord2); }
+.tkw:hover::before { transform:scaleY(1); }
+.tkw-icon { font-size:1.4rem; margin-bottom:0.6rem; display:block; }
+.tkw-title {
+  font-family:'Libre Baskerville',serif; font-size:0.97rem; font-weight:700;
+  color:rgba(236,231,218,0.92); margin-bottom:0.4rem;
+}
+.tkw-text { font-family:'Lora',serif; font-size:0.88rem; color:var(--muted); line-height:1.68; }
+
+/* ── VISUALISATION CANVAS ── */
+.vis-wrap {
+  margin:2rem 0; border:1px solid var(--border); background:var(--deep);
+  overflow:hidden; position:relative;
+}
+.vis-label {
+  position:absolute; top:0.75rem; left:1rem; z-index:2;
+  font-family:'JetBrains Mono',monospace; font-size:0.58rem; font-weight:500;
+  letter-spacing:0.15em; text-transform:uppercase; color:var(--gold); opacity:0.6;
+}
+#vis-canvas { display:block; width:100%; height:220px; }
+
+/* ── LINKS BAR ── */
+.links-bar {
+  margin-top:3.5rem; padding-top:2rem;
+  border-top:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem;
+}
+.links-bar-left {
+  font-family:'Lora',serif; font-style:italic;
+  font-size:0.95rem; color:var(--faint);
+}
+.links-bar-right { display:flex; gap:0.75rem; }
+.lbtn {
+  font-family:'JetBrains Mono',monospace; font-size:0.65rem; font-weight:600;
+  letter-spacing:0.1em; text-transform:uppercase; text-decoration:none;
+  padding:0.72rem 1.5rem; transition:all 0.22s;
+}
+.lbtn-pri { background:var(--gold); color:var(--void); }
+.lbtn-pri:hover { background:rgba(236,231,218,0.95); }
+.lbtn-out { border:1px solid rgba(236,231,218,0.2); color:var(--text); }
+.lbtn-out:hover { border-color:var(--gold); color:var(--gold); }
+
+/* ── FADE ── */
+.fade { opacity:0; transform:translateY(16px); transition:opacity 0.7s ease, transform 0.7s ease; }
+.fade.on { opacity:1; transform:none; }
+
+/* ── RESPONSIVE ── */
+@media(max-width:640px){
+  :root { --pad:1.4rem; }
+  .puzz { grid-template-columns:50px 1fr; }
+  .puzz-num { font-size:1.4rem; }
+  .takeaways { grid-template-columns:1fr; }
+  .links-bar { flex-direction:column; align-items:flex-start; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">Abdelhay <em>·</em></a>
+    <a href="index.html#projects" class="back-link">Back to portfolio</a>
+  </div>
+</nav>
+
+<!-- ARTICLE -->
+<article class="article">
+
+  <!-- OVERVIEW -->
+  <div class="fade">
+    <div class="slbl">Overview</div>
+    <h2>Elon Musk Trailer Problem</h2>
+    <div class="prose">
+      <p>an NP problem</p>
+      <p>Millions of sulutions</p>
+    </div>
+
+  </div>
+
+  <hr class="divider">
+
+  
+</body>
+</html>
